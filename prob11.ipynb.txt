@@ -1,0 +1,242 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 3,
+   "metadata": {
+    "collapsed": false
+   },
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "Populating the interactive namespace from numpy and matplotlib\n"
+     ]
+    }
+   ],
+   "source": [
+    "%pylab inline\n",
+    "import numpy as np\n",
+    "import matplotlib.pyplot as plt\n",
+    "import scipy.io\n",
+    "import sys"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Labeling Patients"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Part B\n",
+    "A = np.load('gene_data_train.npy')\n",
+    "b = np.load('diabetes_train.npy')\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "# Part C\n",
+    "A_test = np.load('gene_data_test.npy')\n",
+    "b_test = np.load('diabetes_test.npy')\n"
+   ]
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# Image Analysis"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "markdown",
+   "metadata": {},
+   "source": [
+    "# GPS Locationing"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## RUN THIS FUNCTION BEFORE YOU START THIS PROBLEM\n",
+    "## This function will generate the gold code associated with the satellite ID using linear shift registers\n",
+    "## The satellite_ID can be any integer between 1 and 24\n",
+    "def Gold_code_satellite(satellite_ID):\n",
+    "    codelength = 1023\n",
+    "    registerlength = 10\n",
+    "    \n",
+    "    # Defining the MLS for G1 generator\n",
+    "    register1 = -1*np.ones(registerlength)\n",
+    "    MLS1 = np.zeros(codelength)\n",
+    "    for i in range(codelength):\n",
+    "        MLS1[i] = register1[9]\n",
+    "        modulo = register1[2]*register1[9]\n",
+    "        register1 = np.roll(register1,1)\n",
+    "        register1[0] = modulo\n",
+    "    \n",
+    "    # Defining the MLS for G2 generator\n",
+    "    register2 = -1*np.ones(registerlength)\n",
+    "    MLS2 = np.zeros(codelength)\n",
+    "    for j in range(codelength):\n",
+    "        MLS2[j] = register2[9]\n",
+    "        modulo = register2[1]*register2[2]*register2[5]*register2[7]*register2[8]*register2[9]\n",
+    "        register2 = np.roll(register2,1)\n",
+    "        register2[0] = modulo\n",
+    "    \n",
+    "    delay = np.array([5,6,7,8,17,18,139,140,141,251,252,254,255,256,257,258,469,470,471,472,473,474,509,512,513,514,515,516,859,860,861,862])\n",
+    "    G1_out = MLS1;\n",
+    "    G2_out = np.roll(MLS2,delay[satellite_ID - 1])\n",
+    "    \n",
+    "    CA_code = G1_out * G2_out\n",
+    "    \n",
+    "    return CA_code"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART A CODE HERE\n",
+    "def array_correlation(array1,array2):\n",
+    "    \"\"\" This function should return two array or a matrix with one row corresponding to \n",
+    "    the offset and other to the correlation value\n",
+    "    \"\"\"\n",
+    "    ## INSERT YOUR CODE HERE\n",
+    "    ## Use np.correlate with \"FULL\". Check out the helper page for it "
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 2,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART B CODE HERE"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART C CODE HERE\n",
+    "## THIS IS A HELPER FUNCTION FOR PART C\n",
+    "def integernoise_generator(length_of_noise):\n",
+    "    noise_array = np.random.randint(2,size = length_of_noise)\n",
+    "    noise_array = 2*noise_array - np.ones(size(noise_array))\n",
+    "    return noise_array"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART D CODE HERE\n",
+    "## THIS IS A HELPER FUNCTION FOR PART D\n",
+    "def gaussiannoise_generator(length_of_noise):\n",
+    "    noise_array = np.random.normal(0,1,length_of_noise)\n",
+    "    return noise_array"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART E CODE HERE\n",
+    "## USE 'LOAD' FUNCTION TO LOAD THE DATA\n",
+    "## USE DATA1.NPY AS THE SIGNAL ARRAY"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART F CODE HERE\n",
+    "## USE DATA2.NPY AS THE SIGNAL ARRAY"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {
+    "collapsed": true
+   },
+   "outputs": [],
+   "source": [
+    "## PART G CODE HERE\n",
+    "## USE DATA3.NPY AS THE SIGNAL ARRAY"
+   ]
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 2",
+   "language": "python",
+   "name": "python2"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 2
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython2",
+   "version": "2.7.11"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 0
+}
